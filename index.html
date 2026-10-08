@@ -1,0 +1,318 @@
+<!-- ============================================================================
+     FILE:    index.html
+     PROJECT: HTML & CSS Assignment — Navigation Bar + Responsive Cards
+     AUTHOR:  [Rohit Bhattarai   ·   Roll no:28
+     RULE:    HTML = meaning (structure).  CSS = appearance.  They stay apart.
+     Every line below is commented with what it does.
+     ============================================================================ -->
+
+<!DOCTYPE html>                                                                                   <!-- Declares "this is HTML5" so the browser does not drop into legacy quirks mode. -->
+<html lang="en">                                                                                   <!-- Root element. lang="en" tells screen readers and search engines the page language. -->
+<head>                                                                                             <!-- The head holds metadata only — nothing in here is drawn on the page. -->
+  <meta charset="UTF-8" />                                                                         <!-- Character encoding: renders £, é, — and curly quotes correctly instead of garbled symbols. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />                          <!-- THE responsive line: layout width = device width, and no fake zoom-out on phones. -->
+  <meta name="description" content="Meridian Supply — a small online store of everyday essentials, built with semantic HTML5 and responsive CSS." />  <!-- Summary search engines may show under the title; no visual effect. -->
+  <title>Meridian Supply — Online Store | HTML &amp; CSS Assignment</title>                          <!-- Text shown in the browser tab and in bookmarks. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />                                     <!-- Opens the connection to Google Fonts early so text does not flicker in. -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />                            <!-- Same early connection, for the font files themselves. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />  <!-- Loads Inter for text and IBM Plex Mono for prices. -->
+  <link rel="stylesheet" href="style.css" />                                                    <!-- Links my own stylesheet: every visual rule lives in that one file. -->
+</head>                                                                                            <!-- End of the metadata section. -->
+
+<body>                                                                                             <!-- Everything a visitor actually sees sits inside the body. -->
+
+  <a class="skip-link" href="#main">Skip to main content</a>                                       <!-- Invisible until Tab is pressed, so keyboard users can jump past the menu. -->
+
+  <!-- ===================== PART A: THE NAVIGATION BAR ===================== -->
+
+  <header class="site-header" id="top">                                                            <!-- Header landmark = the page banner. id="top" is the target of the "Home" link. -->
+    <nav class="nav" aria-label="Main navigation">                                                 <!-- Nav landmark, named "Main navigation" so assistive tech announces it clearly. -->
+
+      <a class="nav__brand" href="#top">Meridian<span class="nav__brand-mark">.</span></a>         <!-- Logo text, clicking it returns to the top; the span exists only to colour the full stop. -->
+
+      <input class="nav__checkbox" type="checkbox" id="nav-toggle" />                              <!-- Hidden checkbox: it stores the open/closed state of the mobile menu, so no JavaScript is needed. -->
+      <label class="nav__toggle" for="nav-toggle">                                                 <!-- The visible hamburger button, connected to that checkbox by for="nav-toggle". -->
+        <span aria-hidden="true">&#9776;</span>                                                    <!-- The ☰ glyph, hidden from screen readers because it is only decoration. -->
+        <span class="sr-only">Toggle navigation menu</span>                                        <!-- The button's real label, read aloud only by screen readers. -->
+      </label>                                                                                     <!-- End of the hamburger button. -->
+
+      <ul class="nav__list" id="primary-menu">                                                     <!-- A list, because a menu is a list of destinations: screen readers announce "list, 5 items". -->
+        <li class="nav__item"><a class="nav__link is-active" href="#top">Home</a></li>             <!-- Item 1. is-active marks the page you are currently on. -->
+        <li class="nav__item"><a class="nav__link" href="#shop">Shop</a></li>                      <!-- Item 2. Links to the card section by its id. -->
+        <li class="nav__item"><a class="nav__link" href="#about">About</a></li>                    <!-- Item 3. Links to the About section by its id. -->
+        <li class="nav__item"><a class="nav__link" href="#shop">New Arrivals</a></li>              <!-- Item 4 — the extra navigation item I chose. -->
+        <li class="nav__item"><a class="nav__link" href="#contact">Contact</a></li>                <!-- Item 5. Links to the Contact section by its id. -->
+      </ul>                                                                                        <!-- End of the navigation list. -->
+    </nav>                                                                                         <!-- End of the navigation landmark. -->
+  </header>                                                                                        <!-- End of the banner landmark. -->
+
+  <!-- ===================== PART D: MAIN CONTENT ===================== -->
+
+  <main id="main">                                                                                 <!-- Main landmark: the unique content of this page (only one per page). -->
+
+    <section class="hero">                                                                         <!-- Hero section: the heading and introduction the brief asks for. -->
+      <div class="shell hero__grid">                                                               <!-- .shell centres the content and caps its width; .hero__grid makes the two columns. -->
+
+        <div class="hero__copy">                                                                   <!-- Column 1: the text. -->
+          <p class="hero__eyebrow">Online store · Autumn collection</p>                            <!-- Small uppercase label that sets context above the heading. -->
+          <h1 class="hero__title">Everyday essentials, chosen to last.</h1>                        <!-- The one and only h1: the main heading search engines and screen readers rely on. -->
+          <p class="hero__text">                                                                   <!-- Opening paragraph: what the shop is and who it is for. -->
+            A short, deliberate range of desk and carry goods. Six products, tested
+            daily, priced honestly — nothing we would not use ourselves.
+          </p>                                                                                     <!-- End of the introduction paragraph. -->
+          <div class="hero__actions">                                                              <!-- A row that holds the two calls to action. -->
+            <a class="btn btn--primary" href="#shop">Shop the collection</a>                       <!-- Primary action: a link, because it navigates to the card section. -->
+            <a class="btn btn--ghost" href="#about">Our story</a>                                  <!-- Secondary action: outline styling keeps the priority order clear. -->
+          </div>                                                                                   <!-- End of the button row. -->
+          <ul class="hero__meta">                                                                  <!-- A list of short promises; unordered because the order does not matter. -->
+            <li>Free shipping over $75</li>                                                        <!-- Promise 1. -->
+            <li>30-day returns</li>                                                                <!-- Promise 2. -->
+            <li>Six curated products</li>                                                          <!-- Promise 3. -->
+          </ul>                                                                                    <!-- End of the promises list. -->
+        </div>                                                                                     <!-- End of column 1. -->
+
+        <figure class="hero__figure">                                                              <!-- Column 2: figure groups a self-contained image. -->
+          <img src="https://media.base44.com/images/public/6ac4b6baa70602cb9b331d8c/e92fc9fc0_generated_image.png" alt="Flat-lay of a notebook, steel bottle and desk lamp on a light surface" />  <!-- A public image URL, so the photo still appears when you open this file on its own; alt text describes it for screen readers. -->
+        </figure>                                                                                  <!-- End of the hero image. -->
+      </div>                                                                                       <!-- End of the hero grid. -->
+    </section>                                                                                     <!-- End of the hero section. -->
+
+    <!-- ===================== PART C: THE SIX-CARD LAYOUT ===================== -->
+
+    <section class="section" id="shop">                                                            <!-- id="shop" is the anchor target for the Shop and New Arrivals links. -->
+      <div class="shell">                                                                          <!-- Centred, width-capped container. -->
+        <header class="section__head">                                                             <!-- Heading block for this section. -->
+          <div>                                                                                    <!-- Wrapper that groups the eyebrow, heading and lead paragraph. -->
+            <p class="section__eyebrow">The collection</p>                                         <!-- Small label naming the section. -->
+            <h2 class="section__title">Six things worth keeping</h2>                               <!-- h2, one level below the h1, keeps the document outline logical. -->
+            <p class="section__lead">                                                              <!-- Introductory sentence for the card section. -->
+              A short, deliberate range: tested materials, honest prices, nothing
+              we would not use ourselves.
+            </p>                                                                                   <!-- End of the section introduction. -->
+          </div>                                                                                   <!-- End of the heading wrapper. -->
+        </header>                                                                                  <!-- End of the section heading block. -->
+
+        <div class="card-grid">                                                                    <!-- The grid container: it alone decides how many cards fit per row (see style.css). -->
+
+          <!-- ---------- CARD 1 — the reusable card component ---------- -->
+          <article class="card">                                                                   <!-- article, because a product card would still make sense on its own. -->
+            <div class="card__media">                                                              <!-- Media wrapper, so the tag can be positioned over the photo. -->
+              <img src="https://media.base44.com/images/public/6ac4b6baa70602cb9b331d8c/a4eece53b_generated_image.png" alt="Field Notebook No. 1: charcoal cloth-bound notebook" />  <!-- The product photograph. -->
+              <span class="card__tag">Stationery</span>                                            <!-- Category tag layered on top of the image. -->
+            </div>                                                                                 <!-- End of the media box. -->
+            <div class="card__body">                                                               <!-- The text half of the card. -->
+              <div class="card__heading">                                                          <!-- Row that puts the title and the price side by side. -->
+                <h3 class="card__title">Field Notebook No. 1</h3>                                  <!-- h3, because the card sits under the section's h2. -->
+                <span class="card__price">$18.00</span>                                            <!-- span, because a price is inline text, not a block. -->
+              </div>                                                                               <!-- End of the title/price row. -->
+              <p class="card__text">192 fountain-pen-friendly pages in a cloth-bound cover that lies flat.</p>  <!-- Short product description. -->
+              <p class="card__meta">4.8 rating · In stock</p>                                      <!-- Extra information: rating and stock level. -->
+              <div class="card__footer">                                                           <!-- Footer pinned to the bottom of the card by margin-top: auto. -->
+                <span class="card__note">Free shipping</span>                                      <!-- Small reassurance line on the left. -->
+                <button class="card__button" type="button">Add to cart</button>                    <!-- button, because it performs an action; type="button" stops it submitting a form. -->
+              </div>                                                                               <!-- End of the card footer. -->
+            </div>                                                                                 <!-- End of the card body. -->
+          </article>                                                                               <!-- End of card 1. -->
+
+          <!-- ---------- CARDS 2 TO 6 — identical structure, different content ---------- -->
+          <article class="card">                                                                   <!-- Card 2: same component, so it needs no new CSS. -->
+            <div class="card__media">                                                              <!-- Media wrapper for card 2. -->
+              <img src="https://media.base44.com/images/public/6ac4b6baa70602cb9b331d8c/5b13fae89_generated_image.png" alt="Obsidian Desk Lamp: matte black lamp with a slim arm" />  <!-- Card 2 photograph. -->
+              <span class="card__tag">Lighting</span>                                              <!-- Card 2 category tag. -->
+            </div>                                                                                 <!-- End of card 2 media box. -->
+            <div class="card__body">                                                               <!-- Card 2 text half. -->
+              <div class="card__heading">                                                          <!-- Card 2 title/price row. -->
+                <h3 class="card__title">Obsidian Desk Lamp</h3>                                    <!-- Card 2 title. -->
+                <span class="card__price">$89.00</span>                                            <!-- Card 2 price. -->
+              </div>                                                                               <!-- End of card 2 title/price row. -->
+              <p class="card__text">Warm dimmable LED on a slim steel arm with a weighted, non-slip base.</p>  <!-- Card 2 description. -->
+              <p class="card__meta">4.7 rating · In stock</p>                                       <!-- Card 2 rating and stock. -->
+              <div class="card__footer">                                                           <!-- Card 2 footer. -->
+                <span class="card__note">Free shipping</span>                                      <!-- Card 2 reassurance line. -->
+                <button class="card__button" type="button">Add to cart</button>                    <!-- Card 2 action button. -->
+              </div>                                                                               <!-- End of card 2 footer. -->
+            </div>                                                                                 <!-- End of card 2 body. -->
+          </article>                                                                               <!-- End of card 2. -->
+
+          <article class="card">                                                                   <!-- Card 3. -->
+            <div class="card__media">                                                              <!-- Card 3 media wrapper. -->
+              <img src="https://media.base44.com/images/public/6ac4b6baa70602cb9b331d8c/844cd539c_generated_image.png" alt="Aeris Wireless Earbuds in an open charging case" />  <!-- Card 3 photograph. -->
+              <span class="card__tag">Audio</span>                                                 <!-- Card 3 category tag. -->
+            </div>                                                                                 <!-- End of card 3 media box. -->
+            <div class="card__body">                                                               <!-- Card 3 text half. -->
+              <div class="card__heading">                                                          <!-- Card 3 title/price row. -->
+                <h3 class="card__title">Aeris Wireless Earbuds</h3>                                <!-- Card 3 title. -->
+                <span class="card__price">$129.00</span>                                           <!-- Card 3 price. -->
+              </div>                                                                               <!-- End of card 3 title/price row. -->
+              <p class="card__text">Active noise cancelling with a 28-hour charging case and USB-C fast charge.</p>  <!-- Card 3 description. -->
+              <p class="card__meta">4.6 rating · Low stock</p>                                     <!-- Card 3 rating and stock. -->
+              <div class="card__footer">                                                           <!-- Card 3 footer. -->
+                <span class="card__note">Free shipping</span>                                      <!-- Card 3 reassurance line. -->
+                <button class="card__button" type="button">Add to cart</button>                    <!-- Card 3 action button. -->
+              </div>                                                                               <!-- End of card 3 footer. -->
+            </div>                                                                                 <!-- End of card 3 body. -->
+          </article>                                                                               <!-- End of card 3. -->
+
+          <article class="card">                                                                   <!-- Card 4. -->
+            <div class="card__media">                                                              <!-- Card 4 media wrapper. -->
+              <img src="https://media.base44.com/images/public/6ac4b6baa70602cb9b331d8c/10554fdf9_generated_image.png" alt="Kestrel Insulated Bottle: brushed steel water bottle" />  <!-- Card 4 photograph. -->
+              <span class="card__tag">Drinkware</span>                                             <!-- Card 4 category tag. -->
+            </div>                                                                                 <!-- End of card 4 media box. -->
+            <div class="card__body">                                                               <!-- Card 4 text half. -->
+              <div class="card__heading">                                                          <!-- Card 4 title/price row. -->
+                <h3 class="card__title">Kestrel Insulated Bottle</h3>                              <!-- Card 4 title. -->
+                <span class="card__price">$32.00</span>                                            <!-- Card 4 price. -->
+              </div>                                                                               <!-- End of card 4 title/price row. -->
+              <p class="card__text">Keeps drinks cold for 24 hours in a powder-coated stainless steel body.</p>  <!-- Card 4 description. -->
+              <p class="card__meta">4.9 rating · In stock</p>                                      <!-- Card 4 rating and stock. -->
+              <div class="card__footer">                                                           <!-- Card 4 footer. -->
+                <span class="card__note">Free shipping</span>                                      <!-- Card 4 reassurance line. -->
+                <button class="card__button" type="button">Add to cart</button>                    <!-- Card 4 action button. -->
+              </div>                                                                               <!-- End of card 4 footer. -->
+            </div>                                                                                 <!-- End of card 4 body. -->
+          </article>                                                                               <!-- End of card 4. -->
+
+          <article class="card">                                                                   <!-- Card 5. -->
+            <div class="card__media">                                                              <!-- Card 5 media wrapper. -->
+              <img src="https://media.base44.com/images/public/6ac4b6baa70602cb9b331d8c/5b412fc0c_generated_image.png" alt="Atlas Laptop Sleeve: charcoal felt sleeve standing upright" />  <!-- Card 5 photograph. -->
+              <span class="card__tag">Bags</span>                                                  <!-- Card 5 category tag. -->
+            </div>                                                                                 <!-- End of card 5 media box. -->
+            <div class="card__body">                                                               <!-- Card 5 text half. -->
+              <div class="card__heading">                                                          <!-- Card 5 title/price row. -->
+                <h3 class="card__title">Atlas Laptop Sleeve</h3>                                   <!-- Card 5 title. -->
+                <span class="card__price">$54.00</span>                                            <!-- Card 5 price. -->
+              </div>                                                                               <!-- End of card 5 title/price row. -->
+              <p class="card__text">Water-resistant felt with a soft microfibre lining, sized for a 14-inch laptop.</p>  <!-- Card 5 description. -->
+              <p class="card__meta">4.5 rating · In stock</p>                                      <!-- Card 5 rating and stock. -->
+              <div class="card__footer">                                                           <!-- Card 5 footer. -->
+                <span class="card__note">Free shipping</span>                                      <!-- Card 5 reassurance line. -->
+                <button class="card__button" type="button">Add to cart</button>                    <!-- Card 5 action button. -->
+              </div>                                                                               <!-- End of card 5 footer. -->
+            </div>                                                                                 <!-- End of card 5 body. -->
+          </article>                                                                               <!-- End of card 5. -->
+
+          <article class="card">                                                                   <!-- Card 6: the sixth and last card. -->
+            <div class="card__media">                                                              <!-- Card 6 media wrapper. -->
+              <img src="https://media.base44.com/images/public/6ac4b6baa70602cb9b331d8c/c0e8bedde_generated_image.png" alt="Cirrus Mechanical Keyboard: compact keyboard with grey keycaps" />  <!-- Card 6 photograph. -->
+              <span class="card__tag">Peripherals</span>                                           <!-- Card 6 category tag. -->
+            </div>                                                                                 <!-- End of card 6 media box. -->
+            <div class="card__body">                                                               <!-- Card 6 text half. -->
+              <div class="card__heading">                                                          <!-- Card 6 title/price row. -->
+                <h3 class="card__title">Cirrus Mechanical Keyboard</h3>                            <!-- Card 6 title. -->
+                <span class="card__price">$115.00</span>                                           <!-- Card 6 price. -->
+              </div>                                                                               <!-- End of card 6 title/price row. -->
+              <p class="card__text">75% layout with hot-swappable switches inside a single block of aluminium.</p>  <!-- Card 6 description. -->
+              <p class="card__meta">4.8 rating · Back in stock</p>                                 <!-- Card 6 rating and stock. -->
+              <div class="card__footer">                                                           <!-- Card 6 footer. -->
+                <span class="card__note">Free shipping</span>                                      <!-- Card 6 reassurance line. -->
+                <button class="card__button" type="button">Add to cart</button>                    <!-- Card 6 action button. -->
+              </div>                                                                               <!-- End of card 6 footer. -->
+            </div>                                                                                 <!-- End of card 6 body. -->
+          </article>                                                                               <!-- End of card 6. -->
+        </div>                                                                                     <!-- End of the six-card grid. -->
+      </div>                                                                                       <!-- End of the centred container. -->
+    </section>                                                                                     <!-- End of the card section. -->
+
+    <!-- ===================== ABOUT SECTION ===================== -->
+
+    <section class="section" id="about">                                                           <!-- id="about" is the target of the About link and the "Our story" button. -->
+      <div class="shell about">                                                                    <!-- Two-column grid: introduction, then body text and features. -->
+        <div class="about__intro">                                                                 <!-- Column 1: the section heading. -->
+          <p class="section__eyebrow">About us</p>                                                 <!-- Small label naming the section. -->
+          <h2 class="section__title">Everyday objects, made to be used</h2>                        <!-- Section heading, one level below the h1. -->
+        </div>                                                                                     <!-- End of the heading column. -->
+
+        <div class="about__body">                                                                  <!-- Column 2: the story and the feature list. -->
+          <p class="about__text">                                                                  <!-- The shop's story in one paragraph. -->
+            Meridian began as a single shelf in a shared studio: notebooks we actually
+            wrote in, a lamp that did not glare, a bottle that did not leak. We now
+            curate that same short list for anyone who would rather buy one good
+            version of a thing than three forgettable ones.
+          </p>                                                                                     <!-- End of the story paragraph. -->
+          <ul class="features">                                                                    <!-- The same Grid idea as the cards, at a smaller scale. -->
+            <li class="feature">                                                                   <!-- Feature 1. -->
+              <h3 class="feature__title">Small batch</h3>                                          <!-- Feature 1 heading. -->
+              <p class="feature__text">Six products, chosen slowly and stocked in limited runs.</p>  <!-- Feature 1 explanation. -->
+            </li>                                                                                  <!-- End of feature 1. -->
+            <li class="feature">                                                                   <!-- Feature 2. -->
+              <h3 class="feature__title">Free shipping</h3>                                        <!-- Feature 2 heading. -->
+              <p class="feature__text">Delivery is free on every order over $75, dispatched in one working day.</p>  <!-- Feature 2 explanation. -->
+            </li>                                                                                  <!-- End of feature 2. -->
+            <li class="feature">                                                                   <!-- Feature 3. -->
+              <h3 class="feature__title">30-day returns</h3>                                       <!-- Feature 3 heading. -->
+              <p class="feature__text">Send anything back within 30 days for a full refund, no questions.</p>  <!-- Feature 3 explanation. -->
+            </li>                                                                                  <!-- End of feature 3. -->
+          </ul>                                                                                    <!-- End of the feature list. -->
+        </div>                                                                                     <!-- End of column 2. -->
+      </div>                                                                                       <!-- End of the about grid. -->
+    </section>                                                                                     <!-- End of the about section. -->
+
+    <!-- ===================== CONTACT SECTION ===================== -->
+
+    <section class="section" id="contact">                                                         <!-- id="contact" is the target of the Contact navigation link. -->
+      <div class="shell">                                                                          <!-- Centred, width-capped container. -->
+        <div class="panel">                                                                        <!-- A bordered panel groups the contact information. -->
+          <div class="panel__intro">                                                               <!-- Left column: the invitation to get in touch. -->
+            <p class="section__eyebrow">Contact</p>                                                <!-- Small label naming the section. -->
+            <h2 class="section__title">Questions about an order?</h2>                              <!-- Section heading. -->
+            <p class="about__text">Write to us and a real person replies — usually the same working day.</p>  <!-- Reassuring supporting sentence. -->
+            <a class="btn btn--primary" href="mailto:hello@meridiansupply.example">Email the studio</a>  <!-- mailto: opens the visitor's own email app, already addressed. -->
+          </div>                                                                                   <!-- End of the left column. -->
+
+          <dl class="panel__list">                                                                 <!-- Description list: the correct markup for label/value pairs. -->
+            <dt>Email</dt>                                                                         <!-- dt = the term being described. -->
+            <dd>rohit.bhattarai@patancollege.edu.np</dd>                                                  <!-- dd = its description. -->
+            <dt>Opening hours</dt>                                                                 <!-- Next term. -->
+            <dd>Monday to Friday, 9:00 – 18:00</dd>                                                <!-- Its description. -->
+            <dt>Studio</dt>                                                                        <!-- Next term. -->
+            <dd>Lalitpur, Nepal</dd>                                              <!-- Its description. -->
+          </dl>                                                                                    <!-- End of the description list. -->
+        </div>                                                                                     <!-- End of the contact panel. -->
+      </div>                                                                                       <!-- End of the centred container. -->
+    </section>                                                                                     <!-- End of the contact section. -->
+  </main>                                                                                          <!-- End of the main content. -->
+
+  <!-- ===================== FOOTER ===================== -->
+
+  <footer class="site-footer">                                                                     <!-- Footer landmark: closing information for the page. -->
+    <div class="shell footer">                                                                     <!-- Four-column grid: brand plus three link groups. -->
+      <div class="footer__brand">                                                                  <!-- Column 1: brand and one-line description. -->
+        <p class="footer__logo">Meridian<span class="nav__brand-mark">.</span></p>                 <!-- Logo text; reuses the accent span from the navbar. -->
+        <p class="footer__text">A small online store of everyday objects, built as an HTML &amp; CSS assignment project.</p>  <!-- What the site is. -->
+      </div>                                                                                       <!-- End of the brand column. -->
+
+      <nav class="footer__nav" aria-label="Shop links">                                            <!-- Column 2: its own nav landmark, labelled so the two are distinguishable. -->
+        <h3 class="footer__heading">Shop</h3>                                                      <!-- Heading for this group of links. -->
+        <ul class="footer__list">                                                                  <!-- List of shop links. -->
+          <li><a href="#shop">All products</a></li>                                                <!-- Link back to the card section. -->
+          <li><a href="#shop">New arrivals</a></li>                                                <!-- Link back to the card section. -->
+          <li><a href="#shop">Notebooks</a></li>                                                   <!-- Link back to the card section. -->
+          <li><a href="#shop">Desk lighting</a></li>                                               <!-- Link back to the card section. -->
+        </ul>                                                                                      <!-- End of the shop link list. -->
+      </nav>                                                                                       <!-- End of column 2. -->
+
+      <nav class="footer__nav" aria-label="Company links">                                         <!-- Column 3: a second, separately labelled nav landmark. -->
+        <h3 class="footer__heading">Company</h3>                                                   <!-- Heading for this group of links. -->
+        <ul class="footer__list">                                                                  <!-- List of company links. -->
+          <li><a href="#about">About us</a></li>                                                   <!-- Jumps to the About section. -->
+          <li><a href="#contact">Contact</a></li>                                                  <!-- Jumps to the Contact section. -->
+          <li><a href="#about">Shipping &amp; returns</a></li>                                     <!-- Jumps to the About section, which explains the policies. -->
+        </ul>                                                                                      <!-- End of the company link list. -->
+      </nav>                                                                                       <!-- End of column 3. -->
+
+      <div class="footer__nav">                                                                    <!-- Column 4: useful external links. -->
+        <h3 class="footer__heading">Assignment</h3>                                                <!-- Heading for this group of links. -->
+        <ul class="footer__list">                                                                  <!-- List of assignment links. -->
+          <li><a href="https://github.com/" target="_blank" rel="noreferrer">GitHub repository</a></li>  <!-- target="_blank" opens a new tab; rel="noreferrer" stops the new tab reading this page. -->
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noreferrer">MDN CSS reference</a></li>  <!-- The documentation I learned from. -->
+        </ul>                                                                                      <!-- End of the assignment link list. -->
+      </div>                                                                                       <!-- End of column 4. -->
+    </div>                                                                                         <!-- End of the footer grid. -->
+
+    <div class="shell footer__bottom">                                                             <!-- Bottom strip: copyright on the left, credit on the right. -->
+      <p>&copy; 2026 Meridian Supply. All rights reserved.</p>                                     <!-- &copy; is the HTML entity for the copyright symbol. -->
+      <p>Student project — Rohit Bhattarai, 2544828</p>                                
+    </div>                                                                                         <!-- End of the bottom strip. -->
+  </footer>                                                                                        <!-- End of the footer landmark. -->
+</body>                                                                                            <!-- End of the visible page. -->
+</html>                                                                                            <!-- End of the document. -->

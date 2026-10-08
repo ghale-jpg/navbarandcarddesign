@@ -1,0 +1,691 @@
+/* ============================================================================
+   FILE:    style.css
+   PROJECT: HTML & CSS Assignment — Navigation Bar + Responsive Cards
+   HOW IT IS ORGANISED
+     1. Reset            5. Navigation bar     9. The card grid
+     2. Colour & size    6. Hero              10. The card
+     3. Base text        7. Buttons           11. About / Contact
+     4. Layout helpers   8. Sections          12. Footer  13. Media queries  14. Accessibility
+   WHY BOTH FLEXBOX AND GRID? Flexbox lays items out along one axis (a row of
+   nav links). Grid lays items out on two axes at once (3 columns x 2 rows of
+   cards). Each is used for the job it was designed for.
+   ========================================================================== */
+
+/* ------------------------------ 1. RESET ------------------------------ */
+
+*,                                  /* the universal selector: matches every element on the page */
+*::before,                          /* ::before creates a generated element, so * alone does not catch it */
+*::after {                          /* same for ::after — resetting both keeps every box predictable */
+  box-sizing: border-box;           /* width INCLUDES padding and border, so a 300px card really measures 300px */
+}
+
+* {                                 /* a second pass over every element */
+  margin: 0;                        /* removes each browser's different default margins */
+  padding: 0;                       /* removes default padding on lists, fieldsets and so on */
+}
+
+ul,                                 /* every unordered list */
+ol {                                /* every ordered list */
+  list-style: none;                 /* removes the bullets, because my lists are layouts, not bulleted text */
+}
+
+img {                               /* every image */
+  display: block;                   /* images are inline by default, which leaves a few pixels of gap underneath */
+  max-width: 100%;                  /* an image can never be wider than its container */
+}
+
+a {                                 /* every link */
+  color: inherit;                   /* the link takes the colour of the text around it */
+  text-decoration: none;            /* removes the default underline; I add my own on hover */
+}
+
+button,                             /* form controls do NOT inherit the page font by default */
+input {                             /* so both are told to do it */
+  font: inherit;                    /* makes buttons and inputs use the same font as the page */
+  color: inherit;                   /* and the same text colour */
+}
+
+/* ------------------- 2. COLOURS, SIZES AND SHAPES ------------------- */
+
+:root {                             /* :root is the html element — the highest point, so these values are global */
+  --paper: #f9f9f7;                 /* page background: off-white */
+  --ink: #1a1a1a;                   /* body text: charcoal — about 14:1 contrast on the paper */
+  --muted: #6b6b6b;                 /* secondary text for descriptions and labels */
+  --line: #e5e5e5;                  /* the light grey used for every 1px border */
+  --white: #ffffff;                 /* card and panel surfaces */
+  --accent: #2563eb;                /* the single accent colour: links, buttons, tags */
+  --accent-dark: #1d4ed8;           /* darker accent for pressed and hovered buttons */
+  --font-body: "Inter", system-ui, sans-serif;      /* the text typeface, with safe fallbacks */
+  --font-mono: "IBM Plex Mono", monospace;          /* the price typeface: digits line up in a column */
+  --space-xs: 0.5rem;               /* spacing scale — one rhythm for the whole page */
+  --space-sm: 1rem;                 /* step 2 */
+  --space-md: 1.5rem;               /* step 3 */
+  --space-lg: 2.5rem;               /* step 4 */
+  --space-xl: 4rem;                 /* step 5 */
+  --radius: 0.5rem;                 /* the corner rounding for cards and panels */
+  --radius-pill: 999px;             /* a very large radius makes a fully rounded "pill" shape */
+  --shadow: 0 22px 45px -28px rgba(26, 26, 26, 0.45);   /* the soft shadow under a hovered card */
+  --shell: 72rem;                   /* maximum content width, so lines never run the full width of a big screen */
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);   /* one consistent easing curve for every transition */
+}
+
+/* ----------------------------- 3. BASE TEXT ----------------------------- */
+
+html {                              /* the html element */
+  scroll-behavior: smooth;          /* anchor links glide to their target instead of jumping */
+  scroll-padding-top: 5rem;         /* stops the sticky header covering a heading you jumped to */
+}
+
+body {                              /* the whole visible page */
+  font-family: var(--font-body);    /* uses the text typeface defined above */
+  font-size: 1rem;                  /* 16px — the accessible baseline size */
+  line-height: 1.6;                 /* 160% line height, comfortable for reading paragraphs */
+  color: var(--ink);                /* charcoal text */
+  background-color: var(--paper);   /* off-white background */
+  -webkit-font-smoothing: antialiased;   /* makes text render at the same weight on macOS as on Windows */
+}
+
+h1,                                 /* heading level 1 */
+h2,                                 /* heading level 2 */
+h3 {                                /* heading level 3 — all three share these settings */
+  font-weight: 600;                 /* semi-bold: strong without shouting */
+  line-height: 1.15;                /* tighter than body text, because headings are read in short bursts */
+  letter-spacing: -0.02em;          /* pulling large letters slightly together looks more polished */
+}
+
+h1 {                                /* the main heading only */
+  font-size: clamp(2rem, 5vw, 3.25rem);   /* clamp(min, preferred, max) scales with the screen but never too small or too big */
+}
+
+/* ------------------------- 4. LAYOUT HELPERS ------------------------- */
+
+.shell {                            /* the reusable centred container used by every section */
+  width: 100%;                      /* fills the space available */
+  max-width: var(--shell);          /* but never grows past 72rem */
+  margin-inline: auto;              /* equal left and right margins = centred */
+  padding-inline: 1.25rem;          /* keeps text off the screen edge on phones */
+}
+
+.sr-only {                          /* hides text visually but keeps it for screen readers */
+  position: absolute;               /* takes it out of the normal flow */
+  width: 1px;                       /* one pixel wide */
+  height: 1px;                      /* one pixel tall */
+  overflow: hidden;                 /* so nothing spills out */
+  clip-path: inset(50%);            /* crops it to nothing — NOT display:none, which would hide it from screen readers too */
+  white-space: nowrap;              /* stops the hidden text wrapping and changing the layout */
+}
+
+.skip-link {                        /* the keyboard-only "skip to content" link */
+  position: absolute;               /* positioned relative to the page */
+  top: -3rem;                       /* parked above the top edge, out of sight */
+  left: 1rem;                       /* near the left edge */
+  z-index: 60;                      /* above the header when it appears */
+  background: var(--ink);           /* dark background so it stands out */
+  color: var(--white);              /* white text on that dark background */
+  padding: 0.6rem 1rem;             /* inner spacing so it looks like a button */
+  border-radius: var(--radius);     /* rounded corners */
+  transition: top 0.2s ease;        /* animates its slide into view */
+}
+
+.skip-link:focus {                  /* only when a keyboard user tabs to it */
+  top: 1rem;                        /* slides down into sight */
+}
+
+/* --------------------------- 5. NAVIGATION --------------------------- */
+
+.site-header {                      /* the header that contains the navigation bar */
+  position: sticky;                 /* sticks to the top of the window as the page scrolls */
+  top: 0;                           /* the exact point it sticks to */
+  z-index: 50;                      /* sits above cards and images */
+  background-color: rgba(249, 249, 247, 0.85);   /* the paper colour, slightly see-through */
+  backdrop-filter: blur(10px);      /* blurs whatever scrolls underneath — the frosted glass effect */
+  border-bottom: 1px solid var(--line);   /* hairline rule separating the bar from the page */
+}
+
+.nav {                              /* the flex container holding brand, links and button */
+  display: flex;                    /* lays its children out in a row — the textbook Flexbox case */
+  align-items: center;              /* centres them vertically, whatever their height */
+  justify-content: space-between;   /* brand pushed left, the rest pushed right */
+  gap: var(--space-md);             /* minimum breathing room between the groups */
+  max-width: var(--shell);          /* same maximum width as every other section */
+  margin-inline: auto;              /* centres the bar */
+  padding: 1rem 1.25rem;            /* vertical and horizontal padding inside the bar */
+  position: relative;               /* makes this the reference point for the mobile dropdown */
+}
+
+.nav__brand {                       /* the logo text link */
+  font-size: 1rem;                  /* 16px */
+  font-weight: 600;                 /* semi-bold */
+  text-transform: uppercase;        /* the classic logo treatment */
+  letter-spacing: 0.22em;           /* wide tracking makes small capitals readable */
+  transition: color 0.25s ease;     /* the colour change on hover is animated, not instant */
+}
+
+.nav__brand:hover {                 /* while the pointer is over the logo */
+  color: var(--accent);             /* it turns the accent blue */
+}
+
+.nav__brand-mark {                  /* the single full stop in the logo */
+  color: var(--accent);             /* coloured blue so the logo carries the accent colour */
+}
+
+.nav__list {                        /* the list of navigation links */
+  display: flex;                    /* a row of items on one axis — exactly what Flexbox is for */
+  align-items: center;              /* centres the links vertically */
+  gap: 2.25rem;                     /* even spacing between every link, no margins needed */
+}
+
+.nav__link {                        /* each individual navigation link */
+  position: relative;               /* creates the anchor point for the underline below */
+  display: inline-block;            /* so padding and the underline apply properly */
+  padding-block: 0.25rem;           /* top and bottom padding enlarges the clickable area */
+  font-size: 0.9rem;                /* slightly smaller than body text */
+  color: var(--muted);              /* grey until hovered */
+  transition: color 0.25s ease;     /* smooth colour change */
+}
+
+.nav__link::after {                 /* a generated element: the hover underline */
+  content: "";                      /* ::after needs content, even an empty string */
+  position: absolute;               /* placed relative to the link */
+  left: 0;                          /* starting at the left edge */
+  bottom: -2px;                     /* just under the text */
+  height: 1px;                      /* a hairline */
+  width: 0;                         /* zero width, so it is invisible to start with */
+  background-color: var(--accent);  /* the accent colour */
+  transition: width 0.3s var(--ease);   /* animates the width, which creates the growing effect */
+}
+
+.nav__link:hover,                   /* while hovered with a mouse */
+.nav__link:focus-visible {          /* or focused with a keyboard — the same feedback for both */
+  color: var(--ink);                /* the text darkens to full contrast */
+}
+
+.nav__link:hover::after,            /* the underline of a hovered link */
+.nav__link:focus-visible::after {   /* and of a keyboard-focused link */
+  width: 100%;                      /* grows to the full width of the link */
+}
+
+.nav__link.is-active {              /* the link for the page you are currently on */
+  color: var(--ink);                /* full-contrast text */
+  font-weight: 500;                 /* slightly heavier than its neighbours */
+}
+
+.nav__link.is-active::after {       /* its underline */
+  width: 100%;                      /* is permanently visible, not just on hover */
+}
+
+.nav__checkbox {                    /* the hidden checkbox that stores the mobile menu state */
+  position: absolute;               /* taken out of the layout flow */
+  opacity: 0;                       /* invisible to the eye */
+  width: 1px;                       /* but still present in the page */
+  height: 1px;                      /* so the label can still toggle it */
+  pointer-events: none;             /* and it cannot be clicked directly */
+}
+
+.nav__toggle {                      /* the visible hamburger button */
+  display: none;                    /* hidden by default; the mobile media query shows it */
+  cursor: pointer;                  /* shows a hand cursor, so it reads as clickable */
+  width: 2.25rem;                   /* a comfortable 36px square target */
+  height: 2.25rem;                  /* square */
+  align-items: center;              /* centres the glyph inside */
+  justify-content: center;          /* centres the glyph inside */
+  border: 1px solid var(--line);    /* a subtle outline */
+  border-radius: var(--radius-pill);   /* fully rounded */
+  font-size: 1rem;                  /* glyph size */
+  transition: border-color 0.25s ease;   /* animated border colour on hover */
+}
+
+.nav__toggle:hover {                /* when hovered */
+  border-color: #b9b9b9;            /* the outline darkens, showing it is interactive */
+}
+
+/* ------------------------------ 6. HERO ------------------------------ */
+
+.hero {                             /* the introduction section at the top of the page */
+  padding-block: var(--space-xl);   /* generous space above and below only */
+}
+
+.hero__grid {                       /* the two-column hero layout */
+  display: grid;                    /* Grid, because there are two columns side by side */
+  grid-template-columns: 1.05fr 0.95fr;   /* text column slightly wider than the image column */
+  align-items: center;              /* centres the two columns vertically against each other */
+  gap: var(--space-xl);             /* large gap between text and image */
+}
+
+.hero__eyebrow,                     /* the small label above a heading */
+.section__eyebrow {                 /* the same style reused in every section */
+  font-size: 0.75rem;               /* small */
+  font-weight: 500;                 /* medium weight */
+  text-transform: uppercase;        /* capitals */
+  letter-spacing: 0.2em;            /* wide tracking, which is what makes small caps look deliberate */
+  color: var(--accent);             /* the accent colour draws the eye */
+}
+
+.hero__title {                      /* the main heading */
+  margin-top: var(--space-sm);      /* space between it and the eyebrow above */
+}
+
+.hero__text {                       /* the introduction paragraph */
+  margin-top: 1.25rem;              /* space below the heading */
+  max-width: 38ch;                  /* caps the line at about 38 characters, the most readable length */
+  font-size: 1.05rem;               /* slightly larger than body text for emphasis */
+  color: var(--muted);              /* secondary colour, so the heading stays dominant */
+}
+
+.hero__actions {                    /* the row holding the two buttons */
+  display: flex;                    /* Flexbox: one row of items */
+  flex-wrap: wrap;                  /* lets the second button drop to a new line on narrow screens */
+  gap: 0.75rem;                     /* space between the two buttons */
+  margin-top: var(--space-lg);      /* space above the buttons */
+}
+
+.hero__meta {                       /* the list of short promises */
+  display: flex;                    /* another row of items */
+  flex-wrap: wrap;                  /* wraps rather than overflows on small screens */
+  gap: 0.5rem 1.5rem;               /* row gap, then column gap */
+  margin-top: var(--space-lg);      /* space above the list */
+  font-size: 0.75rem;               /* small, quiet text */
+  text-transform: uppercase;        /* capitals */
+  letter-spacing: 0.14em;           /* wide tracking */
+  color: var(--muted);              /* secondary colour */
+}
+
+.hero__figure {                     /* the frame around the hero photograph */
+  border: 1px solid var(--line);    /* hairline border */
+  border-radius: var(--radius);     /* rounded corners */
+  overflow: hidden;                 /* clips the image to those rounded corners */
+  background: var(--white);         /* white behind the image */
+  aspect-ratio: 4 / 3;              /* reserves the space BEFORE the image loads, so the page never jumps */
+}
+
+.hero__figure img {                 /* the photograph inside that frame */
+  width: 100%;                      /* fills the frame horizontally */
+  height: 100%;                     /* fills it vertically */
+  object-fit: cover;                /* crops to fill without squashing or stretching the photo */
+}
+
+/* ----------------------------- 7. BUTTONS ----------------------------- */
+
+.btn {                              /* the shared button and button-link style */
+  display: inline-flex;             /* behaves like inline text but lays out its contents flexibly */
+  align-items: center;              /* centres any icon against the label */
+  gap: 0.5rem;                      /* space between icon and label */
+  padding: 0.75rem 1.4rem;          /* vertical then horizontal padding inside the button */
+  border: 1px solid transparent;    /* a border on every button, so both versions are the same size */
+  border-radius: var(--radius-pill);   /* the pill shape */
+  font-size: 0.9rem;                /* button text size */
+  font-weight: 500;                 /* medium weight */
+  transition: transform 0.2s ease, background-color 0.25s ease, border-color 0.25s ease;   /* animates all three hover changes */
+}
+
+.btn--primary {                     /* the main call to action */
+  background-color: var(--accent);  /* solid accent fill */
+  color: var(--white);              /* white text on that fill */
+}
+
+.btn--primary:hover {               /* when hovered */
+  background-color: var(--accent-dark);   /* the darker accent shade */
+  transform: translateY(-2px);      /* and a 2px lift, which reads as "clickable" */
+}
+
+.btn--ghost {                       /* the secondary action */
+  border-color: var(--line);        /* outline only, no fill */
+  color: var(--ink);                /* normal text colour */
+}
+
+.btn--ghost:hover {                 /* when hovered */
+  border-color: var(--ink);         /* the outline darkens to acknowledge the pointer */
+}
+
+/* ---------------------------- 8. SECTIONS ---------------------------- */
+
+.section {                          /* every major horizontal band of the page */
+  padding-block: clamp(3rem, 7vw, 5rem);   /* space above and below, scaling gently with the screen */
+  border-top: 1px solid var(--line);       /* the hairline rule that separates one section from the next */
+}
+
+.section__title {                   /* the heading of each section */
+  margin-top: var(--space-sm);      /* space above, away from the eyebrow */
+  font-size: clamp(1.6rem, 3vw, 2.2rem);   /* fluid size: never smaller than 1.6rem, never larger than 2.2rem */
+}
+
+.section__lead {                    /* the introductory sentence under a section heading */
+  margin-top: var(--space-sm);      /* space above */
+  max-width: 52ch;                  /* keeps the line a comfortable reading length */
+  color: var(--muted);              /* secondary colour */
+}
+
+/* --------------------- 9. THE CARD GRID (PART C) --------------------- */
+
+.card-grid {                        /* the container holding all six cards */
+  display: grid;                    /* Grid, because a card layout has BOTH rows and columns */
+  grid-template-columns: repeat(3, 1fr);   /* three equal columns: repeat(3) of one fraction of the free space */
+  gap: var(--space-md);             /* equal space between every card, horizontally and vertically */
+  margin-top: var(--space-lg);      /* space above the grid, below the section heading */
+}
+
+/* ------------------------ 10. THE CARD (PART B) ----------------------- */
+
+.card {                             /* one product card */
+  display: flex;                    /* a column flex container, so the footer can be pushed to the bottom */
+  flex-direction: column;           /* stack the children vertically */
+  height: 100%;                     /* fills the full height of its grid cell, so all cards match */
+  overflow: hidden;                 /* clips the image to the card's rounded corners */
+  background-color: var(--white);   /* white card surface against the off-white page */
+  border: 1px solid var(--line);    /* hairline border */
+  border-radius: var(--radius);     /* rounded corners */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;   /* animates all three hover changes */
+}
+
+.card:hover {                       /* when the pointer is over the card */
+  transform: translateY(-6px);      /* the card lifts 6px */
+  box-shadow: var(--shadow);        /* and gains a soft shadow, so it reads as raised above its neighbours */
+  border-color: #d4d4d4;            /* and the border darkens very slightly */
+}
+
+.card__media {                      /* the box that holds the photograph and the tag */
+  position: relative;               /* makes this the reference point for positioning the tag */
+  aspect-ratio: 4 / 3;              /* fixes every photo area to the same shape, which is why six photos look like a set */
+  overflow: hidden;                 /* clips the photo when it scales up on hover */
+  background-color: #f1f1ef;        /* neutral grey placeholder while the photo is still loading */
+}
+
+.card__media img {                  /* the photograph itself */
+  width: 100%;                      /* fills the media box horizontally */
+  height: 100%;                     /* and vertically */
+  object-fit: cover;                /* crops rather than distorts the photo */
+  transition: transform 0.6s var(--ease);   /* animates the zoom below */
+}
+
+.card:hover .card__media img {      /* the photo inside a hovered card */
+  transform: scale(1.05);           /* zooms 5% — combined with the card lift, the hover feels crafted */
+}
+
+.card__tag {                        /* the category tag */
+  position: absolute;               /* taken out of the flow so it can sit over the photo */
+  top: 0.75rem;                     /* 12px from the top of the media box */
+  left: 0.75rem;                    /* 12px from the left */
+  padding: 0.3rem 0.6rem;           /* small inner spacing */
+  border-radius: var(--radius-pill);   /* pill shape */
+  background-color: rgba(255, 255, 255, 0.92);   /* almost-white background so it stays readable over any photo */
+  font-size: 0.7rem;                /* small text */
+  text-transform: uppercase;        /* capitals */
+  letter-spacing: 0.12em;           /* wide tracking */
+}
+
+.card__body {                       /* the text half of the card */
+  display: flex;                    /* column flex container */
+  flex-direction: column;           /* stacked, so margin-top: auto can push the footer down */
+  flex: 1;                          /* absorbs all the remaining height in the card */
+  padding: 1.25rem 1.25rem 1.4rem;  /* top, sides, then a little more at the bottom */
+}
+
+.card__heading {                    /* the row holding the title and the price */
+  display: flex;                    /* one row */
+  align-items: baseline;            /* aligns the title and price along their text baselines, not their boxes */
+  justify-content: space-between;   /* title left, price right */
+  gap: 0.75rem;                     /* minimum space between them */
+}
+
+.card__title {                      /* the product name */
+  font-size: 1.05rem;               /* slightly larger than body text */
+}
+
+.card__price {                      /* the price */
+  font-family: var(--font-mono);    /* monospace, so digits line up down the column of cards */
+  font-size: 0.95rem;               /* slightly smaller than the title */
+  white-space: nowrap;              /* "$129.00" must never break across two lines */
+}
+
+.card__text {                       /* the short description */
+  margin-top: 0.6rem;               /* space below the title row */
+  font-size: 0.9rem;                /* smaller than body text */
+  color: var(--muted);              /* secondary colour, so the title stays dominant */
+}
+
+.card__meta {                       /* the rating and stock line */
+  margin-top: 0.9rem;               /* space above */
+  font-size: 0.8rem;                /* small and quiet */
+  color: var(--muted);              /* secondary colour */
+}
+
+.card__footer {                     /* the bottom row of the card */
+  display: flex;                    /* one row */
+  align-items: center;              /* centred vertically */
+  justify-content: space-between;   /* note left, button right */
+  gap: 0.75rem;                     /* minimum space between them */
+  margin-top: auto;                 /* THE key line: pushes this row to the bottom of the flex column, so all six cards match */
+  padding-top: 1rem;                /* space above the row */
+  border-top: 1px solid var(--line);   /* hairline separating it from the description */
+}
+
+.card__note {                       /* the small "Free shipping" line */
+  font-size: 0.7rem;                /* small text */
+  text-transform: uppercase;        /* capitals */
+  letter-spacing: 0.14em;           /* wide tracking */
+  color: var(--muted);              /* secondary colour */
+}
+
+.card__button {                     /* the "Add to cart" button */
+  padding: 0.55rem 0.9rem;          /* inner spacing, making a comfortable tap target */
+  border: 1px solid var(--accent);  /* accent-coloured border */
+  border-radius: var(--radius-pill);   /* pill shape */
+  background-color: var(--accent);  /* accent fill */
+  color: var(--white);              /* white label */
+  font-size: 0.75rem;               /* small text */
+  font-weight: 500;                 /* medium weight */
+  cursor: pointer;                  /* shows the hand cursor, because this element does something */
+  transition: background-color 0.25s ease, transform 0.2s ease;   /* animates the hover changes */
+}
+
+.card__button:hover {               /* when hovered */
+  background-color: var(--accent-dark);   /* darker shade */
+  transform: translateY(-1px);      /* and a small lift */
+}
+
+/* ---------------------- 11. ABOUT AND CONTACT ---------------------- */
+
+.about {                            /* the two-column about block */
+  display: grid;                    /* Grid, because there are two columns */
+  grid-template-columns: 0.9fr 1.1fr;   /* heading column slightly narrower than the text column */
+  gap: var(--space-xl);             /* large gap between the columns */
+}
+
+.about__text {                      /* body paragraphs in the about and contact sections */
+  color: var(--muted);              /* secondary colour */
+}
+
+.features {                         /* the three feature columns */
+  display: grid;                    /* the same Grid idea as the cards, at a smaller scale */
+  grid-template-columns: repeat(3, 1fr);   /* three equal columns */
+  gap: var(--space-md);             /* even space between them */
+  margin-top: var(--space-lg);      /* space above the feature row */
+}
+
+.feature__title {                   /* each feature heading */
+  font-size: 0.95rem;               /* small but still clearly a heading */
+}
+
+.feature__text {                    /* each feature description */
+  margin-top: 0.4rem;               /* space below its heading */
+  font-size: 0.9rem;                /* smaller than body text */
+  color: var(--muted);              /* secondary colour */
+}
+
+.panel {                            /* the bordered box holding the contact details */
+  display: grid;                    /* two columns: the invitation and the details */
+  grid-template-columns: 1fr 1fr;   /* two equal columns */
+  gap: var(--space-xl);             /* large gap between them */
+  padding: var(--space-xl);         /* generous space inside the panel */
+  background-color: var(--white);   /* white surface, so it stands out from the page */
+  border: 1px solid var(--line);    /* hairline border */
+  border-radius: var(--radius);     /* rounded corners */
+}
+
+.panel__intro .btn {                /* the button inside the panel's left column */
+  margin-top: var(--space-lg);      /* space above it, separating it from the paragraph */
+}
+
+.panel__list {                      /* the description list of contact details */
+  display: grid;                    /* grid, so each row is spaced evenly */
+  gap: 0.4rem;                      /* small gap between rows */
+}
+
+.panel__list dt {                   /* dt = the label, for example "Email" */
+  font-size: 0.75rem;               /* small */
+  text-transform: uppercase;        /* capitals */
+  letter-spacing: 0.14em;           /* wide tracking */
+  color: var(--muted);              /* secondary colour */
+  margin-top: var(--space-sm);      /* space above each new label */
+}
+
+.panel__list dd {                   /* dd = the value that belongs to that label */
+  font-size: 0.95rem;               /* readable size */
+}
+
+/* ----------------------------- 12. FOOTER ----------------------------- */
+
+.site-footer {                      /* the closing band of the page */
+  border-top: 1px solid var(--line);   /* hairline separating it from the content above */
+  background-color: var(--white);   /* white, so it reads as separate from the off-white page */
+}
+
+.footer {                           /* the footer's grid */
+  display: grid;                    /* Grid, because it has four columns */
+  grid-template-columns: 1.4fr repeat(3, 1fr);   /* a wider brand column, then three equal link columns */
+  gap: var(--space-lg);             /* even space between the columns */
+  padding-block: var(--space-xl) var(--space-lg);   /* more space above than below */
+}
+
+.footer__logo {                     /* the brand line in the footer */
+  font-weight: 600;                 /* semi-bold */
+  text-transform: uppercase;        /* capitals, matching the navbar logo */
+  letter-spacing: 0.22em;           /* the same wide tracking as the navbar */
+}
+
+.footer__text {                     /* the one-line description under it */
+  margin-top: var(--space-sm);      /* space above */
+  max-width: 28ch;                  /* keeps it to a short measure */
+  font-size: 0.9rem;                /* slightly smaller than body text */
+  color: var(--muted);              /* secondary colour */
+}
+
+.footer__heading {                  /* the small headings above each link group */
+  font-size: 0.75rem;               /* small */
+  font-weight: 500;                 /* medium weight */
+  text-transform: uppercase;        /* capitals */
+  letter-spacing: 0.14em;           /* wide tracking */
+  color: var(--muted);              /* secondary colour */
+}
+
+.footer__list {                     /* each group of footer links */
+  display: grid;                    /* grid, so the gap spaces the rows evenly */
+  gap: 0.6rem;                      /* space between each link */
+  margin-top: var(--space-sm);      /* space below its heading */
+  font-size: 0.9rem;                /* link text size */
+}
+
+.footer__list a {                   /* each footer link */
+  color: var(--muted);              /* secondary colour until hovered */
+  transition: color 0.25s ease;     /* smooth colour change */
+}
+
+.footer__list a:hover {             /* when hovered */
+  color: var(--accent);             /* turns the accent blue */
+}
+
+.footer__bottom {                   /* the bottom strip with copyright and credit */
+  display: flex;                    /* one row */
+  flex-wrap: wrap;                  /* wraps onto two lines on narrow screens */
+  gap: 0.75rem;                     /* space between the two lines when wrapped */
+  justify-content: space-between;   /* copyright left, credit right */
+  padding-block: var(--space-md);   /* space above and below */
+  border-top: 1px solid var(--line);   /* hairline separating it from the columns above */
+  font-size: 0.8rem;                /* small text */
+  color: var(--muted);              /* secondary colour */
+}
+
+/* ------------------ 13. RESPONSIVE RULES (TABLET) ------------------ */
+
+@media (max-width: 900px) {         /* everything inside applies only at 900px wide or narrower */
+  .hero__grid {                     /* the hero */
+    grid-template-columns: 1fr;     /* drops to a single column, so text sits above the image */
+    gap: var(--space-lg);           /* a slightly smaller gap now that the items are stacked */
+  }
+
+  .card-grid {                      /* the card layout */
+    grid-template-columns: repeat(2, 1fr);   /* two cards per row on a tablet, as the brief requires */
+  }
+
+  .about,                           /* the about block */
+  .panel {                          /* and the contact panel */
+    grid-template-columns: 1fr;     /* both stack into one column */
+    gap: var(--space-lg);           /* with a smaller gap between the stacked parts */
+  }
+
+  .footer {                         /* the footer */
+    grid-template-columns: repeat(2, 1fr);   /* two columns instead of four */
+  }
+}
+
+/* ------------------ 13. RESPONSIVE RULES (MOBILE) ------------------ */
+
+@media (max-width: 640px) {         /* everything inside applies only at 640px wide or narrower */
+  .card-grid,                       /* the cards */
+  .features,                        /* the feature list */
+  .footer {                         /* and the footer */
+    grid-template-columns: 1fr;     /* all become a single column: one card per row, as the brief requires */
+  }
+
+  .nav__toggle {                    /* the hamburger button */
+    display: inline-flex;           /* becomes visible on small screens */
+  }
+
+  .nav__list {                      /* the horizontal row of links */
+    display: none;                  /* is hidden until the button is pressed */
+  }
+
+  .nav__checkbox:checked ~ .nav__list {   /* "~" selects the list that follows the checkbox; :checked means the button was pressed */
+    display: flex;                  /* so the menu appears — the entire mobile menu with no JavaScript */
+    flex-direction: column;         /* links stacked vertically */
+    align-items: stretch;           /* each one the full width of the bar */
+    gap: 0;                         /* no gap, because each link now has its own border */
+    position: absolute;             /* dropped out of the header row */
+    inset-inline: 0;                /* spans the full width, left edge to right edge */
+    top: 100%;                      /* sits immediately below the header */
+    padding: 0.5rem 1.25rem 1rem;   /* inner spacing */
+    background-color: var(--paper);  /* opaque again, because it now covers page content */
+    border-bottom: 1px solid var(--line);   /* closes the menu off with a hairline */
+  }
+
+  .nav__list .nav__link {           /* each link inside the open mobile menu */
+    display: block;                 /* full width instead of just the text width */
+    padding-block: 0.85rem;         /* a thumb-sized tap target */
+    border-bottom: 1px solid var(--line);   /* a hairline between rows, like a list of options */
+  }
+
+  .nav__list .nav__link::after {    /* the growing hover underline */
+    display: none;                  /* is switched off, because it makes no sense on a stacked menu */
+  }
+}
+
+/* ------------------------- 14. ACCESSIBILITY ------------------------- */
+
+a:focus-visible,                    /* links */
+button:focus-visible,               /* buttons */
+label:focus-visible {               /* and the menu button label */
+  outline: 2px solid var(--accent);   /* get a visible outline only for keyboard users */
+  outline-offset: 2px;            /* set slightly away from the element, so it is clearly visible */
+  border-radius: var(--radius);   /* follows the shape of the element */
+}
+
+@media (prefers-reduced-motion: reduce) {   /* applies when the visitor's system asks for less motion */
+  * {                               /* every element */
+    transition-duration: 0.01ms !important;   /* has its animations reduced to almost nothing */
+    animation-duration: 0.01ms !important;    /* so the page holds still for people who need that */
+  }
+
+  html {                            /* and the page itself */
+    scroll-behavior: auto;          /* jumps instead of gliding when an anchor link is clicked */
+  }
+}
